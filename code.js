@@ -10,7 +10,25 @@ function startGaReminder() {
 }
 
 function getGaData() {
-  return "GaReminderTest";
+  var PROFILE_ID = "ga:88170321";
+
+  var metrics = "ga:sessions, ga:percentNewSessions, ga:newVisits";
+  var optArgs = {
+    'dimensions': 'ga:keyword, ga:region, ga:networkDomain',
+  };
+  var startDate = "2016-02-27";
+  var endDate = "2016-02-28";
+
+  var gaData = Analytics.Data.Ga.get(PROFILE_ID, startDate, endDate, metrics, optArgs).rows;
+  var sheet = SpreadsheetApp.getActiveSheet();
+
+  sheet.getRange(1, 1, gaData.length, gaData[0].length).setValues(gaData); 
+  
+  for (i = 0; i < gaData.length; i++) {
+    Logger.log(gaData[i]);
+  }
+  
+  return gaData;
 }
 
 function createGaText(gaData) {
