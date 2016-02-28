@@ -1,3 +1,22 @@
+function startGaReminder() {
+  // GAデータを取得
+  var gaData = getGaData();
+  
+  // GAデータをslackに投げやすい形式に整形
+  gaText = createGaText(gaData);
+  
+  // Slackに投げる。
+  sendPepperBot("gas_prac02", gaText);
+}
+
+function getGaData() {
+  return "GaReminderTest";
+}
+
+function createGaText(gaData) {
+  return gaData; 
+}
+
 function sendPepperBot(channel, text) {
   // 引数がなかった場合
   if (!channel) {
