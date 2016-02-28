@@ -3,27 +3,39 @@ function startGaReminder() {
   var gaData = getGaData();
   
   // GAデータをslackに投げやすい形式に整形
-  gaText = createGaText(gaData);
+  gaText = createGaText(gaData[0]);
   
   // Slackに投げる。
   sendPepperBot("gas_prac02", gaText);
 }
 
+
+// 前日のセッション数やCV数を取得する
 function getGaData() {
+  // profile_idの設定
   var PROFILE_ID = "ga:88170321";
 
-  var metrics = "ga:sessions, ga:percentNewSessions, ga:newVisits";
+  // https://developers.google.com/analytics/devguides/reporting/core/dimsmets#view=detail&group=goal_conversions&jump=ga_goalxxvalue
+  var metrics = "ga:sessions, ga:pageviews, ga:GoalCompletionsAll, ga:Goal2Completions";
   var optArgs = {
-    'dimensions': 'ga:keyword, ga:region, ga:networkDomain',
+    'dimensions': '',
   };
-  var startDate = "2016-02-27";
-  var endDate = "2016-02-28";
+  
+  // TODO 日付
+  var date = new Date();
+  var yesterDay = date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + (date.getDate() - 1)).slice(-2);
+  
+  var startDate = yesterDay;
+  var endDate = yesterDay;
 
   var gaData = Analytics.Data.Ga.get(PROFILE_ID, startDate, endDate, metrics, optArgs).rows;
-  var sheet = SpreadsheetApp.getActiveSheet();
-
-  sheet.getRange(1, 1, gaData.length, gaData[0].length).setValues(gaData); 
   
+  // SpreadSheet
+  var sheet = SpreadsheetApp.getActiveSheet();
+  // シート初期化
+  sheet.clear();
+  sheet.getRange(1, 1, gaData.length, gaData[0].length).setValues(gaData); 
+ 
   for (i = 0; i < gaData.length; i++) {
     Logger.log(gaData[i]);
   }
@@ -32,7 +44,16 @@ function getGaData() {
 }
 
 function createGaText(gaData) {
-  return gaData; 
+  // textの初期化と宣言
+  gaText = "";
+  
+  gaText += "昨日のGAから取得したデータを送信します\n";
+  gaText += "セッション数　　　： " + gaData[0] + "\n";
+  gaText += "ビュー数　　　　　： " + gaData[1] + "\n";
+  gaText += "全コンバージョン数： " + gaData[2] + "\n";
+  gaText += "コンバージョン２数： " + gaData[3] + "\n";
+  
+  return gaText; 
 }
 
 function sendPepperBot(channel, text) {
