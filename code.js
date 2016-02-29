@@ -6,7 +6,7 @@ function startGaReminder() {
   gaText = createGaText(gaData[0]);
   
   // Slackに投げる。
-  sendPepperBot("your_slack_channel_name", gaText);
+  sendPepperBot("bt_all", gaText);
 }
 
 // PepperBotにslackを送ってもらう関数
@@ -19,7 +19,7 @@ function sendPepperBot(channel, text) {
     text = "Hi, I am Pepper. How are you?"; 
   }
   
-  var slack_url = "https://hooks.slack.com/services/xxxxxx/yyyyyy/zzzzzzzzzzz";
+  var slack_url = "https://hooks.slack.com/services/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";
   
   res = UrlFetchApp.fetch(slack_url, {
     payload : JSON.stringify({
@@ -33,7 +33,7 @@ function sendPepperBot(channel, text) {
 function getGaData() {
   
   // profile_idの設定。GAのアドレス(pの後の数字)から取得可能。
-  var PROFILE_ID = "ga:xxxxxxxxxx";
+  var PROFILE_ID = "ga:88170321";
 
   // GAから取得する値を設定。具体的なパラメータは以下参照
   // https://developers.google.com/analytics/devguides/reporting/core/dimsmets
@@ -71,10 +71,10 @@ function createGaText(gaData) {
   gaText = "";
   
   gaText += "昨日のGAから取得したデータを送信します\n";
-  gaText += "セッション数　　　： " + gaData[0] + "\n";
-  gaText += "ビュー数　　　　　： " + gaData[1] + "\n";
-  gaText += "全コンバージョン数： " + gaData[2] + "\n";
-  gaText += "コンバージョン２数： " + gaData[3] + "\n";
+  gaText += "セッション数： " + gaData[0] + "\n";
+  gaText += "ビュー数　　： " + gaData[1] + "\n";
+//  gaText += "全コンバージョン数： " + gaData[2] + "\n";
+//  gaText += "コンバージョン２数： " + gaData[3] + "\n";
   
   return gaText; 
 }
